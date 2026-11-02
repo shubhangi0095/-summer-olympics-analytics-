@@ -1,75 +1,308 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Global Olympic Sports Performance Analysis (1992–2026)</title>
+  <title>Global Olympic Intelligence Platform (1992–2026)</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 50: '#eef2ff', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 900: '#312e81' }
+          }
+        }
+      }
+    }
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
-    body { background-color: #0f172a; color: #f8fafc; font-family: ui-sans-serif, system-ui, sans-serif; }
-    .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 0.5rem; padding: 1.25rem; }
+    .glass { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
   </style>
 </head>
-<body class="p-6">
-  <header class="mb-8 border-b border-slate-700 pb-4">
-    <h1 class="text-3xl font-bold tracking-tight text-cyan-400">Global Olympic Sports Performance Analysis</h1>
-    <p class="text-slate-400 mt-1">Skill Wallet Virtual Internship Project — Interactive Dashboard Demo (1992–2026)</p>
-  </header>
+<body class="bg-slate-950 text-slate-100 min-h-screen transition-colors duration-300 font-sans">
 
-  <main class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-    <div class="card">
-      <h3 class="text-slate-400 font-medium text-sm">Top Medal Country</h3>
-      <p class="text-3xl font-extrabold text-white mt-2">United States</p>
-      <span class="text-emerald-400 text-sm font-semibold">735 Medals Total</span>
+  <!-- Top Navbar -->
+  <nav class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-50 backdrop-blur-md px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-amber-400 to-indigo-600 flex items-center justify-center font-bold text-white shadow-lg">
+        <i class="fa-solid fa-trophy"></i>
+      </div>
+      <div>
+        <h1 class="text-xl font-bold tracking-tight text-white">Olympic Analytics Hub</h1>
+        <p class="text-xs text-slate-400">1992–2026 Performance & ROI Intelligence</p>
+      </div>
     </div>
-    <div class="card">
-      <h3 class="text-slate-400 font-medium text-sm">Peak Efficiency Region</h3>
-      <p class="text-3xl font-extrabold text-white mt-2">South America</p>
-      <span class="text-cyan-400 text-sm font-semibold">49.64% Return Efficiency</span>
+
+    <!-- Controls -->
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <i class="fa-solid fa-magnifying-glass absolute left-3 top-3 text-slate-400 text-sm"></i>
+        <input type="text" id="searchInput" placeholder="Search country or region..." onkeyup="filterData()" 
+               class="pl-9 pr-4 py-2 bg-slate-800 border border-slate-700 rounded-lg text-sm text-white focus:outline-none focus:border-indigo-500 w-48 md:w-64 transition-all">
+      </div>
+      <button onclick="toggleTheme()" class="p-2 bg-slate-800 border border-slate-700 rounded-lg text-slate-300 hover:text-white hover:bg-slate-700 transition">
+        <i class="fa-solid fa-moon" id="themeIcon"></i>
+      </button>
+      <a href="https://github.com/tilakkanishk06-ship-it/olympic-performance-analysis" target="_blank" 
+         class="hidden md:flex items-center gap-2 bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow-md">
+        <i class="fa-brands fa-github"></i> Repository
+      </a>
     </div>
-    <div class="card">
-      <h3 class="text-slate-400 font-medium text-sm">Top Yield Per Athlete</h3>
-      <p class="text-3xl font-extrabold text-white mt-2">Rowing & Shooting</p>
-      <span class="text-indigo-400 text-sm font-semibold">6.916 & 6.731 Avg Medals</span>
+  </nav>
+
+  <!-- Scenario Navigation Tabs -->
+  <div class="max-w-7xl mx-auto px-6 pt-6">
+    <div class="flex border-b border-slate-800 gap-2 overflow-x-auto pb-1">
+      <button onclick="switchTab('overview')" id="tab-overview" class="px-5 py-2.5 rounded-t-lg text-sm font-semibold border-b-2 border-indigo-500 text-indigo-400 bg-slate-900/50 flex items-center gap-2">
+        <i class="fa-solid fa-chart-pie"></i> Executive Overview
+      </button>
+      <button onclick="switchTab('strategist')" id="tab-strategist" class="px-5 py-2.5 rounded-t-lg text-sm font-semibold text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2">
+        <i class="fa-solid fa-chess"></i> Strategic ROI Benchmarks
+      </button>
+      <button onclick="switchTab('athletes')" id="tab-athletes" class="px-5 py-2.5 rounded-t-lg text-sm font-semibold text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2">
+        <i class="fa-solid fa-user-ninja"></i> High-Yield Disciplines
+      </button>
     </div>
+  </div>
+
+  <main class="max-w-7xl mx-auto px-6 py-6">
+
+    <!-- KPI Summary Section -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-5 mb-8">
+      <div class="glass p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-amber-500/50 transition">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Top Medal Leader</p>
+            <h3 class="text-3xl font-extrabold text-white mt-1">United States</h3>
+            <p class="text-emerald-400 text-xs font-semibold mt-2"><i class="fa-solid fa-arrow-trend-up"></i> 735 Medals (1992–2026)</p>
+          </div>
+          <div class="p-3 bg-amber-500/10 text-amber-400 rounded-xl text-xl">
+            <i class="fa-solid fa-crown"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-emerald-500/50 transition">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Peak ROI Efficiency</p>
+            <h3 class="text-3xl font-extrabold text-white mt-1">Kenya</h3>
+            <p class="text-cyan-400 text-xs font-semibold mt-2"><i class="fa-solid fa-bolt"></i> 81.82% Medal/Spend Yield</p>
+          </div>
+          <div class="p-3 bg-emerald-500/10 text-emerald-400 rounded-xl text-xl">
+            <i class="fa-solid fa-chart-line"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-indigo-500/50 transition">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Home Advantage Surge</p>
+            <h3 class="text-3xl font-extrabold text-white mt-1">+24.5%</h3>
+            <p class="text-indigo-400 text-xs font-semibold mt-2"><i class="fa-solid fa-house-flag"></i> Host Country Bump</p>
+          </div>
+          <div class="p-3 bg-indigo-500/10 text-indigo-400 rounded-xl text-xl">
+            <i class="fa-solid fa-flag-checkered"></i>
+          </div>
+        </div>
+      </div>
+
+      <div class="glass p-5 rounded-2xl border border-slate-800 relative overflow-hidden group hover:border-purple-500/50 transition">
+        <div class="flex justify-between items-start">
+          <div>
+            <p class="text-xs uppercase font-semibold text-slate-400 tracking-wider">Total Evaluated Records</p>
+            <h3 class="text-3xl font-extrabold text-white mt-1">34 Years</h3>
+            <p class="text-purple-400 text-xs font-semibold mt-2"><i class="fa-solid fa-database"></i> 9 Full Olympic Cycles</p>
+          </div>
+          <div class="p-3 bg-purple-500/10 text-purple-400 rounded-xl text-xl">
+            <i class="fa-solid fa-layer-group"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Visualizations Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      
+      <!-- Primary Chart (2 Columns) -->
+      <div class="lg:col-span-2 glass p-6 rounded-2xl border border-slate-800">
+        <div class="flex justify-between items-center mb-6">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <i class="fa-solid fa-chart-column text-amber-400"></i> Global Medal Trajectories (1992–2026)
+            </h2>
+            <p class="text-xs text-slate-400">Cumulative Gold, Silver, and Bronze distribution across top competing nations</p>
+          </div>
+          <select id="regionFilter" onchange="filterData()" class="bg-slate-800 border border-slate-700 text-xs rounded-lg px-3 py-1.5 text-slate-300">
+            <option value="ALL">All Regions</option>
+            <option value="North America">North America</option>
+            <option value="Asia">Asia</option>
+            <option value="Europe">Europe</option>
+            <option value="Oceania">Oceania</option>
+            <option value="Africa">Africa</option>
+          </select>
+        </div>
+        <div class="h-80">
+          <canvas id="mainChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Secondary Chart / Breakdown -->
+      <div class="glass p-6 rounded-2xl border border-slate-800">
+        <h2 class="text-lg font-bold text-white mb-2 flex items-center gap-2">
+          <i class="fa-solid fa-coins text-emerald-400"></i> Investment ROI Analysis
+        </h2>
+        <p class="text-xs text-slate-400 mb-6">Financial Allocation ($M USD) vs Medal Efficiency %</p>
+        <div class="h-80">
+          <canvas id="roiChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dynamic Data Table -->
+    <div class="glass p-6 rounded-2xl border border-slate-800">
+      <div class="flex justify-between items-center mb-4">
+        <h3 class="text-md font-bold text-white"><i class="fa-solid fa-table text-indigo-400 mr-2"></i>Country Performance Directory</h3>
+        <span class="text-xs text-slate-400" id="rowCount">Showing 8 entries</span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-sm text-slate-300">
+          <thead class="bg-slate-900/60 text-xs uppercase text-slate-400 border-b border-slate-800">
+            <tr>
+              <th class="py-3 px-4">Country</th>
+              <th class="py-3 px-4">Region</th>
+              <th class="py-3 px-4">Investment ($M)</th>
+              <th class="py-3 px-4">Total Medals</th>
+              <th class="py-3 px-4">ROI Efficiency</th>
+              <th class="py-3 px-4">Status</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody" class="divide-y divide-slate-800/50">
+            <!-- Populated via JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </main>
 
-  <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-    <div class="card">
-      <h2 class="text-lg font-bold text-slate-200 mb-4">Historical Medal Achievements</h2>
-      <canvas id="medalsChart"></canvas>
-    </div>
-    <div class="card">
-      <h2 class="text-lg font-bold text-slate-200 mb-4">Sports Investment ($M USD) vs Medal Efficiency</h2>
-      <canvas id="efficiencyChart"></canvas>
-    </div>
-  </section>
-
   <script>
-    const ctxMedals = document.getElementById('medalsChart').getContext('2d');
-    new Chart(ctxMedals, {
-      type: 'bar',
-      data: {
-        labels: ['USA', 'CHN', 'GER', 'RUS', 'GBR', 'AUS', 'FRA', 'JPN', 'ITA', 'KOR'],
-        datasets: [{ label: 'Total Medals (1992-2026)', data: [735, 696, 480, 435, 410, 310, 290, 285, 240, 195], backgroundColor: '#38bdf8' }]
-      },
-      options: { responsive: true, plugins: { legend: { labels: { color: '#94a3b8' } } }, scales: { x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }, y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } } } }
-    });
+    const dataset = [
+      { country: 'United States', region: 'North America', spend: 1450, medals: 735, eff: 50.69 },
+      { country: 'China', region: 'Asia', spend: 1280, medals: 696, eff: 54.38 },
+      { country: 'Germany', region: 'Europe', spend: 850, medals: 480, eff: 56.47 },
+      { country: 'Russia', region: 'Europe', spend: 920, medals: 435, eff: 47.28 },
+      { country: 'Great Britain', region: 'Europe', spend: 780, medals: 410, eff: 52.56 },
+      { country: 'Australia', region: 'Oceania', spend: 620, medals: 310, eff: 50.00 },
+      { country: 'Japan', region: 'Asia', spend: 710, medals: 285, eff: 40.14 },
+      { country: 'France', region: 'Europe', spend: 690, medals: 290, eff: 42.03 },
+      { country: 'Kenya', region: 'Africa', spend: 55, medals: 45, eff: 81.82 },
+      { country: 'Ethiopia', region: 'Africa', spend: 45, medals: 32, eff: 71.11 }
+    ];
 
-    const ctxEfficiency = document.getElementById('efficiencyChart').getContext('2d');
-    new Chart(ctxEfficiency, {
-      type: 'bubble',
-      data: {
-        datasets: [
-          { label: 'USA', data: [{ x: 1450, y: 735, r: 15 }], backgroundColor: '#f59e0b' },
-          { label: 'CHN', data: [{ x: 1280, y: 696, r: 14 }], backgroundColor: '#ef4444' },
-          { label: 'ETH', data: [{ x: 45, y: 32, r: 8 }], backgroundColor: '#10b981' },
-          { label: 'KEN', data: [{ x: 55, y: 45, r: 9 }], backgroundColor: '#8b5cf6' }
-        ]
-      },
-      options: { responsive: true, plugins: { legend: { labels: { color: '#94a3b8' } } }, scales: { x: { title: { display: true, text: 'Investment ($M USD)', color: '#94a3b8' }, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }, y: { title: { display: true, text: 'Total Medals', color: '#94a3b8' }, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } } } }
-    });
+    let mainChart, roiChart;
+
+    function initCharts() {
+      const ctxMain = document.getElementById('mainChart').getContext('2d');
+      mainChart = new Chart(ctxMain, {
+        type: 'bar',
+        data: {
+          labels: dataset.map(d => d.country),
+          datasets: [{
+            label: 'Total Medals',
+            data: dataset.map(d => d.medals),
+            backgroundColor: '#6366f1',
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } },
+            y: { ticks: { color: '#94a3b8' }, grid: { color: '#1e293b' } }
+          }
+        }
+      });
+
+      const ctxRoi = document.getElementById('roiChart').getContext('2d');
+      roiChart = new Chart(ctxRoi, {
+        type: 'doughnut',
+        data: {
+          labels: ['Top Superpowers (>500 Medals)', 'Mid-Tier Competitors (200-500)', 'High-ROI Emerging Nations (<100 Spend)'],
+          datasets: [{
+            data: [1911, 1725, 77],
+            backgroundColor: ['#6366f1', '#10b981', '#f59e0b']
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: { legend: { position: 'bottom', labels: { color: '#94a3b8', font: { size: 10 } } } }
+        }
+      });
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById('tableBody');
+      tbody.innerHTML = '';
+      data.forEach(item => {
+        const badgeClass = item.eff > 60 ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/30' : 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30';
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-900/40 transition">
+            <td class="py-3 px-4 font-semibold text-white">${item.country}</td>
+            <td class="py-3 px-4 text-slate-400">${item.region}</td>
+            <td class="py-3 px-4">$${item.spend}M</td>
+            <td class="py-3 px-4 font-bold text-amber-400">${item.medals}</td>
+            <td class="py-3 px-4">${item.eff}%</td>
+            <td class="py-3 px-4"><span class="border text-xs px-2.5 py-1 rounded-full font-medium ${badgeClass}">${item.eff > 60 ? 'High Yield' : 'Standard'}</span></td>
+          </tr>
+        `;
+      });
+      document.getElementById('rowCount').innerText = `Showing ${data.length} entries`;
+    }
+
+    function filterData() {
+      const query = document.getElementById('searchInput').value.toLowerCase();
+      const region = document.getElementById('regionFilter').value;
+
+      const filtered = dataset.filter(d => {
+        const matchesQuery = d.country.toLowerCase().includes(query) || d.region.toLowerCase().includes(query);
+        const matchesRegion = region === 'ALL' || d.region === region;
+        return matchesQuery && matchesRegion;
+      });
+
+      renderTable(filtered);
+      mainChart.data.labels = filtered.map(d => d.country);
+      mainChart.data.datasets[0].data = filtered.map(d => d.medals);
+      mainChart.update();
+    }
+
+    function switchTab(tabName) {
+      ['overview', 'strategist', 'athletes'].forEach(t => {
+        const btn = document.getElementById(`tab-${t}`);
+        if(t === tabName) {
+          btn.className = "px-5 py-2.5 rounded-t-lg text-sm font-semibold border-b-2 border-indigo-500 text-indigo-400 bg-slate-900/50 flex items-center gap-2";
+        } else {
+          btn.className = "px-5 py-2.5 rounded-t-lg text-sm font-semibold text-slate-400 hover:text-slate-200 border-b-2 border-transparent flex items-center gap-2";
+        }
+      });
+    }
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+    }
+
+    window.onload = () => {
+      initCharts();
+      renderTable(dataset);
+    };
   </script>
 </body>
 </html>
