@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Global Olympic Sports Performance Analysis (1992–2026)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { background-color: #0f172a; color: #f8fafc; font-family: ui-sans-serif, system-ui, sans-serif; }
+    .card { background-color: #1e293b; border: 1px solid #334155; border-radius: 0.5rem; padding: 1.25rem; }
+  </style>
+</head>
+<body class="p-6">
+  <header class="mb-8 border-b border-slate-700 pb-4">
+    <h1 class="text-3xl font-bold tracking-tight text-cyan-400">Global Olympic Sports Performance Analysis</h1>
+    <p class="text-slate-400 mt-1">Skill Wallet Virtual Internship Project — Interactive Dashboard Demo (1992–2026)</p>
+  </header>
+
+  <main class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="card">
+      <h3 class="text-slate-400 font-medium text-sm">Top Medal Country</h3>
+      <p class="text-3xl font-extrabold text-white mt-2">United States</p>
+      <span class="text-emerald-400 text-sm font-semibold">735 Medals Total</span>
+    </div>
+    <div class="card">
+      <h3 class="text-slate-400 font-medium text-sm">Peak Efficiency Region</h3>
+      <p class="text-3xl font-extrabold text-white mt-2">South America</p>
+      <span class="text-cyan-400 text-sm font-semibold">49.64% Return Efficiency</span>
+    </div>
+    <div class="card">
+      <h3 class="text-slate-400 font-medium text-sm">Top Yield Per Athlete</h3>
+      <p class="text-3xl font-extrabold text-white mt-2">Rowing & Shooting</p>
+      <span class="text-indigo-400 text-sm font-semibold">6.916 & 6.731 Avg Medals</span>
+    </div>
+  </main>
+
+  <section class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="card">
+      <h2 class="text-lg font-bold text-slate-200 mb-4">Historical Medal Achievements</h2>
+      <canvas id="medalsChart"></canvas>
+    </div>
+    <div class="card">
+      <h2 class="text-lg font-bold text-slate-200 mb-4">Sports Investment ($M USD) vs Medal Efficiency</h2>
+      <canvas id="efficiencyChart"></canvas>
+    </div>
+  </section>
+
+  <script>
+    const ctxMedals = document.getElementById('medalsChart').getContext('2d');
+    new Chart(ctxMedals, {
+      type: 'bar',
+      data: {
+        labels: ['USA', 'CHN', 'GER', 'RUS', 'GBR', 'AUS', 'FRA', 'JPN', 'ITA', 'KOR'],
+        datasets: [{ label: 'Total Medals (1992-2026)', data: [735, 696, 480, 435, 410, 310, 290, 285, 240, 195], backgroundColor: '#38bdf8' }]
+      },
+      options: { responsive: true, plugins: { legend: { labels: { color: '#94a3b8' } } }, scales: { x: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }, y: { ticks: { color: '#94a3b8' }, grid: { color: '#334155' } } } }
+    });
+
+    const ctxEfficiency = document.getElementById('efficiencyChart').getContext('2d');
+    new Chart(ctxEfficiency, {
+      type: 'bubble',
+      data: {
+        datasets: [
+          { label: 'USA', data: [{ x: 1450, y: 735, r: 15 }], backgroundColor: '#f59e0b' },
+          { label: 'CHN', data: [{ x: 1280, y: 696, r: 14 }], backgroundColor: '#ef4444' },
+          { label: 'ETH', data: [{ x: 45, y: 32, r: 8 }], backgroundColor: '#10b981' },
+          { label: 'KEN', data: [{ x: 55, y: 45, r: 9 }], backgroundColor: '#8b5cf6' }
+        ]
+      },
+      options: { responsive: true, plugins: { legend: { labels: { color: '#94a3b8' } } }, scales: { x: { title: { display: true, text: 'Investment ($M USD)', color: '#94a3b8' }, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } }, y: { title: { display: true, text: 'Total Medals', color: '#94a3b8' }, ticks: { color: '#94a3b8' }, grid: { color: '#334155' } } } }
+    });
+  </script>
+</body>
+</html>

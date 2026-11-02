@@ -1,0 +1,16 @@
+noc,country,region,sports_investment_m_usd,total_athletes,total_medals,medal_efficiency_pct
+USA,United States,North America,1450.0,4200,735,50.69
+CHN,China,Asia,1280.0,3100,696,54.38
+GER,Germany,Europe,850.0,2900,480,56.47
+RUS,Russia,Europe,920.0,2600,435,47.28
+GBR,Great Britain,Europe,780.0,2400,410,52.56
+AUS,Australia,Oceania,620.0,2100,310,50.00
+JPN,Japan,Asia,710.0,2000,285,40.14
+FRA,France,Europe,690.0,2200,290,42.03
+ITA,Italy,Europe,540.0,1800,240,44.44
+KOR,South Korea,Asia,490.0,1400,195,39.80
+BRA,Brazil,South America,310.0,1100,115,37.10
+ETH,Ethiopia,Africa,45.0,210,32,71.11
+KEN,Kenya,Africa,55.0,240,45,81.82
+SVK,Slovakia,Europe,85.0,320,38,44.71
+GEO,Georgia,Europe,65.0,210,33,50.77

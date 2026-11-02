@@ -1,0 +1,70 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<workbook original-version='18.1' source-build='2024.1.0' version='18.1' xmlns:user='http://www.tableausoftware.com/xml/user'>
+  <preferences>
+    <preference name='ui.encoding' value='UTF-8' />
+  </preferences>
+  <datasources>
+    <datasource caption='Medal Results' inline='true' name='federated.medal_results' version='18.1'>
+      <connection class='federated'>
+        <named-connections>
+          <named-connection caption='medal_results' name='textscan.medal_results'>
+            <connection class='textscan' directory='../data' filename='medal_results.csv' password='' />
+          </named-connection>
+        </named-connections>
+        <relation connection='textscan.medal_results' name='medal_results.csv' table='[medal_results#csv]' type='table' />
+      </connection>
+      <column datatype='integer' name='[year]' role='dimension' type='ordinal' />
+      <column datatype='string' name='[noc]' role='dimension' type='nominal' />
+      <column datatype='string' name='[country]' role='dimension' type='nominal' />
+      <column datatype='integer' name='[gold]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[silver]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[bronze]' role='measure' type='quantitative' />
+      <column datatype='integer' name='[total_medals]' role='measure' type='quantitative' />
+      <column caption='Calculated Total Medals' datatype='integer' name='[Calculation_MedalTotal]' role='measure' type='quantitative'>
+        <calculation class='tableau' formula='[gold] + [silver] + [bronze]' />
+      </column>
+      <column caption='Host Country Flag' datatype='boolean' name='[Calculation_IsHost]' role='dimension' type='nominal'>
+        <calculation class='tableau' formula='[host_country] = 1' />
+      </column>
+    </datasource>
+  </datasources>
+  <worksheets>
+    <worksheet name='Global Medal Achievements'>
+      <table>
+        <view>
+          <datasources>
+            <datasource name='federated.medal_results' />
+          </datasources>
+          <datasource-dependencies datasource='federated.medal_results'>
+            <column-instance column='[country]' derivation='None' name='[none:country:nk]' pivot='key' type='nominal' />
+            <column-instance column='[total_medals]' derivation='Sum' name='[sum:total_medals:qk]' pivot='key' type='quantitative' />
+          </datasource-dependencies>
+          <aggregation value='true' />
+        </view>
+        <panes>
+          <pane selection-relaxation-option='selection-relaxation-allow'>
+            <mark class='bar' />
+            <encodings>
+              <color column='[federated.medal_results].[sum:total_medals:qk]' />
+            </encodings>
+          </pane>
+        </panes>
+        <rows>[federated.medal_results].[none:country:nk]</rows>
+        <cols>[federated.medal_results].[sum:total_medals:qk]</cols>
+      </table>
+    </worksheet>
+  </worksheets>
+  <dashboards>
+    <dashboard name='Global Olympic Performance Overview'>
+      <style />
+      <size maxheight='800' maxwidth='1200' minheight='800' minwidth='1200' preset-index='0' type='fixed' />
+      <zones>
+        <zone h='100000' id='1' type-static='layout-basic' w='100000' x='0' y='0'>
+          <zone h='98000' id='2' param='vert' type-static='layout-flow' w='98000' x='1000' y='1000'>
+            <zone h='96000' id='3' name='Global Medal Achievements' w='98000' x='1000' y='1000' />
+          </zone>
+        </zone>
+      </zones>
+    </dashboard>
+  </dashboards>
+</workbook>

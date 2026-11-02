@@ -1,0 +1,11 @@
+athlete_id,name,sex,age,height,weight,team,noc,games,year,season,city,sport,event,medal
+101,Michael Phelps,M,23,193,88,United States,USA,2008 Summer,2008,Summer,Beijing,Swimming,Swimming Men's 200m Butterfly,Gold
+102,Yang Yang,F,26,166,60,China,CHN,2002 Winter,2002,Winter,Salt Lake City,Short Track Speed Skating,Short Track Women's 500m,Gold
+103,Ole Einar Bjoerndalen,M,28,179,66,Norway,NOR,2002 Winter,2002,Winter,Salt Lake City,Biathlon,Biathlon Men's 10k Sprint,Gold
+104,Usain Bolt,M,22,195,94,Jamaica,JAM,2008 Summer,2008,Summer,Beijing,Athletics,Athletics Men's 100m,Gold
+105,Birgit Fischer,F,42,173,66,Germany,GER,2004 Summer,2004,Summer,Athens,Canoeing,Canoeing Women's K-4 500m,Gold
+106,Ma Long,M,32,175,72,China,CHN,2020 Summer,2020,Summer,Tokyo,Table Tennis,Table Tennis Men's Singles,Gold
+107,Simone Biles,F,19,142,47,United States,USA,2016 Summer,2016,Summer,Rio de Janeiro,Gymnastics,Gymnastics Women's Individual All-Around,Gold
+108,Ireen Wust,F,35,168,62,Netherlands,NED,2022 Winter,2022,Winter,Beijing,Speed Skating,Speed Skating Women's 1500m,Gold
+109,Mikaela Shiffrin,F,22,170,64,United States,USA,2018 Winter,2018,Winter,Pyeongchang,Alpine Skiing,Alpine Skiing Women's Giant Slalom,Gold
+110,Eliud Kipchoge,M,36,167,52,Kenya,KEN,2020 Summer,2020,Summer,Tokyo,Athletics,Athletics Men's Marathon,Gold
